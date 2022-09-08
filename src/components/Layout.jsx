@@ -124,7 +124,7 @@ const SwitchIcon = styled.img`
     width: 0.7rem;
     height: 0.7rem;
     object-fit: contain;
-    margin-right: 0.68rem;
+    margin-right: 0.65rem;
     `
 
 const WalletManager = () => {
