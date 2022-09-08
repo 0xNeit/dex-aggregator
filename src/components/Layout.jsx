@@ -5,6 +5,8 @@ import chains from "../data/chains";
 import logo from "../assets/eth-logo.png";
 import walleticon from "../assets/wallet.svg";
 
+const chainIds = Object.keys(chains)
+
 const Nav = styled.div`
     width: 100%;
     height: 80px;
@@ -84,10 +86,48 @@ const ChainIcon = styled.img`
     margin-right: 0.75rem;
     `
 
+const ChainSelect = styled.div`
+    position: absolute;
+    top: calc(8px * 2 + 1.1rem + 1rem);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid var(--light-dark);
+    border-radius: 8px;
+    `
+
+const SwitchChain = styled.button`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px 16px;
+    &:first-child {
+        border-radius: 8px 8px 0 0;
+    }
+    &:last-child {
+        border-radius: 0 0 8px 8px;
+    }
+    &:hover {
+        background-color: var(--light);
+    }
+    `
+
+const SwitchIcon = styled.img`
+    width: 0.7rem;
+    height: 0.7rem;
+    object-fit: contain;
+    margin-right: 0.68rem;
+    `
+
 const WalletManager = () => {
 
     const [ buttonText, setButtonText ] = useState("Enable Ethereum")
     const [ activeChain, setActiveChain ] = useState("0x1")
+    const [ chainSelectActive, setChainSelectActive ] = useState(false)
 
     useEffect(() => {
         updateButtonText()
@@ -144,9 +184,30 @@ const WalletManager = () => {
         }
     }
 
+    // Switch wallet to chain ID
+
+    async function requestSwitch(chainId) {
+        if (typeof ethereum !== "undefined") {
+            await ethereum.request({
+                method: "eth_addEthereumChain",
+                params: [{
+                    chainId,
+                    chainName: chains[chainId].fullName,
+                    nativeCurrency: {
+                        name: chains[chainId].token.toUpperCase(),
+                        symbol: chains[chainId].token.toUpperCase(),
+                        decimals: 18
+                    },
+                    rpcUrls: [chains[chainId].rpc],
+                    blockExplorerUrls: [chains[chainId].explorer]
+                }]
+            })
+        }
+    }
+
     return (
         <Wallet>
-            <Chain>
+            <Chain onClick={() => setChainSelectActive(!chainSelectActive)}>
                 <ChainIcon src={`/tokens/${chains[activeChain].token}.svg`} />
                 {chains[activeChain].name}
             </Chain>
@@ -156,6 +217,18 @@ const WalletManager = () => {
                     {buttonText}
                 </ConnectContent>
             </ConnectButton>
+            {chainSelectActive ? (
+                    <ChainSelect>
+                        {chainIds.slice(0, chainIds.indexOf(activeChain)).concat(chainIds.slice(chainIds.indexOf(activeChain) + 1)).map(chainId => (
+                            <SwitchChain onClick={() => requestSwitch(chainId)}>
+                                <SwitchIcon src={`/tokens/${chains[chainId].token}.svg`} />
+                                {chains[chainId].name}
+                            </SwitchChain>
+                        ))}
+                    </ChainSelect>
+                ) : (
+                    <></>
+                )}
         </Wallet>   
         )
     }
