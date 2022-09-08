@@ -3,13 +3,14 @@
   --accent: #b70fd1;
   --light-dark: #d9a6e0;
   --light: #f1d5f5;
-  --text-black: #111111;
-  --text-light: #999999;
+  --black: #111111;
+  --gray: #96999E;
+  --light-gray: #C6C9CE;
 }
 
 * {
   font-family: "Quicksand", sans-serif;
-  color: var(--text-black);
+  color: var(--black);
   box-sizing: border-box;
 }
 
