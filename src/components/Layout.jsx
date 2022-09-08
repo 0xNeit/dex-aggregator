@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Logo from "../assets/eth-logo.png";
+import logo from "../assets/eth-logo.png";
+import walleticon from "../assets/wallet.svg";
 
 const Nav = styled.div`
     width: 100%;
@@ -23,6 +24,19 @@ const ConnectButton = styled.button`
     &:hover {
         border: 1px solid var(--light-dark);
     }
+    `
+const ConnectContent = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    `
+
+const ConnectIcon = styled.img`
+    width: 0.8rem;
+    height: 0.8rem;
+    object-fit: contain;
+    margin-right: 0.75rem;
     `
 
 const StyledIcon = styled.img`
@@ -47,33 +61,59 @@ const Wrapper = styled.div`
     
 const WalletManager = () => {
 
-    const [ content, setContent ] = useState(getButtonText())
+    const [ buttonText, setButtonText ] = useState("Enable Ethereum")
+    useEffect(updateButtonText, [])
+    useEffect(() => {
+        // Set MetaMask listeners
 
-    function getButtonText() {
+        if (typeof ethereum !== "undefined" && !ethereum.walletInitialized) {
+            ethereum.walletInitialized = true
+            ethereum.on("accountsChanged", updateButtonText)
+        }
+
+        // Remove MetaMask listeners
+
+        return () => {
+            if (typeof ethereum !== "undefined") {
+                ethereum.walletInitialized = false
+                ethereum.removeListener("accountsChanged", updateButtonText)
+            }
+        }
+    })
+
+    // Get button text
+
+    function updateButtonText() {
         if (typeof ethereum === "undefined") {
-            return "Enable Ethereum"
+            setButtonText("Enable Ethereum")
         } else if (!ethereum.selectedAddress) {
-            return "Connect Wallet"
+            setButtonText("Connect Wallet")
         } else {
-            return `${ethereum.selectedAddress.slice(0, 6)}...${ethereum.selectedAddress.slice(-4)}`
+            setButtonText(`${ethereum.selectedAddress.slice(0, 6)}...${ethereum.selectedAddress.slice(-4)}`)
         }
     }
 
-    async function connectWallet() {
+    // Connect to MetaMask
+
+    async function requestConnect() {
         if (typeof ethereum !== "undefined") {
             await ethereum.request({ method: "eth_requestAccounts" })
-            setContent(getButtonText())
         }
     }
 
     return (
-        <ConnectButton onClick={connectWallet}>{content}</ConnectButton>   
+        <ConnectButton onClick={requestConnect}>
+            <ConnectContent>
+                <ConnectIcon src={walleticon} />
+                {buttonText}
+            </ConnectContent>
+        </ConnectButton>   
         )
     }
 
 const NavBar = () => (
     <Nav>
-        <StyledIcon src={Logo} />
+        <StyledIcon src={logo} />
         <StyledTitle>Cross DEX</StyledTitle>
         <WalletManager></WalletManager>
     </Nav>
