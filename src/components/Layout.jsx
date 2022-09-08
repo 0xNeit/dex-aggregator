@@ -47,7 +47,7 @@ const Wrapper = styled.div`
     
 const WalletManager = () => {
 
-    const [ content, setContent ] = useState(getButtonText());
+    const [ content, setContent ] = useState(getButtonText())
 
     function getButtonText() {
         if (typeof ethereum === "undefined") {

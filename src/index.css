@@ -1,14 +1,15 @@
 :root {
-  --background: #F6F6F6;
+  --background: #FFFFFF;
   --accent: #b70fd1;
   --light-dark: #d9a6e0;
   --light: #f1d5f5;
-  --black: #111111;
+  --text-black: #111111;
+  --text-light: #999999;
 }
 
 * {
   font-family: "Quicksand", sans-serif;
-  color: var(--black);
+  color: var(--text-black);
   box-sizing: border-box;
 }
 
@@ -32,6 +33,7 @@ a {
 }
 button {
   cursor: pointer;
+  padding: 0;
 }
 
 code {
