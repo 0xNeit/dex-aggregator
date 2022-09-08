@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import chains from "../data/chains";
 import logo from "../assets/eth-logo.png";
 import walleticon from "../assets/wallet.svg";
 
@@ -20,7 +21,6 @@ const ConnectButton = styled.button`
     border: 1px solid var(--background);
     bordcer-radius: 8px;
     padding: 8px 36px;
-    margin-left: auto;
     &:hover {
         border: 1px solid var(--light-dark);
     }
@@ -58,17 +58,49 @@ const Content = styled.div`
 const Wrapper = styled.div`
     font-size: 1.1rem;
     `
-    
+
+const Wallet = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    `
+
+const Chain = styled.button`
+    font-size: 1.1rem;
+    border: 1px solid var(--light-dark);
+    border-radius: 8px;
+    padding: 8px 36px;
+    margin-right: 1rem;
+    &:hover {
+        background-color: var(--light);
+    }
+    `
+const ChainIcon = styled.img`
+    width: 0.8rem;
+    height: 0.8rem;
+    object-fit: contain;
+    margin-right: 0.75rem;
+    `
+
 const WalletManager = () => {
 
     const [ buttonText, setButtonText ] = useState("Enable Ethereum")
-    useEffect(updateButtonText, [])
+    const [ activeChain, setActiveChain ] = useState("0x1")
+
+    useEffect(() => {
+        updateButtonText()
+        updateActiveChain()
+    }, [])
+
     useEffect(() => {
         // Set MetaMask listeners
 
         if (typeof ethereum !== "undefined" && !ethereum.walletInitialized) {
             ethereum.walletInitialized = true
             ethereum.on("accountsChanged", updateButtonText)
+            ethereum.on("chainChanged", updateActiveChain)
         }
 
         // Remove MetaMask listeners
@@ -77,6 +109,7 @@ const WalletManager = () => {
             if (typeof ethereum !== "undefined") {
                 ethereum.walletInitialized = false
                 ethereum.removeListener("accountsChanged", updateButtonText)
+                ethereum.removeListener("chainChanged", updateActiveChain)
             }
         }
     })
@@ -93,6 +126,16 @@ const WalletManager = () => {
         }
     }
 
+    // Get active chain
+
+    function updateActiveChain() {
+        if (typeof ethereum === "undefined" || !ethereum.selectedAddress) {
+            setActiveChain("0x1")
+        } else if (chains[ethereum.chainId]) {
+            setActiveChain(ethereum.chainId)
+        }
+    }
+
     // Connect to MetaMask
 
     async function requestConnect() {
@@ -102,12 +145,18 @@ const WalletManager = () => {
     }
 
     return (
-        <ConnectButton onClick={requestConnect}>
-            <ConnectContent>
-                <ConnectIcon src={walleticon} />
-                {buttonText}
-            </ConnectContent>
-        </ConnectButton>   
+        <Wallet>
+            <Chain>
+                <ChainIcon src={`/tokens/${chains[activeChain].token}.svg`} />
+                {chains[activeChain].name}
+            </Chain>
+            <ConnectButton onClick={requestConnect}>
+                <ConnectContent>
+                    <ConnectIcon src={walleticon} />
+                    {buttonText}
+                </ConnectContent>
+            </ConnectButton>
+        </Wallet>   
         )
     }
 

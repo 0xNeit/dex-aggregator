@@ -78,7 +78,6 @@ const Switch = styled.button`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background-color: var(--background);
     border: 1px solid var(--light-dark);
     border-radius: 20px;
     margin: 18px 0;
