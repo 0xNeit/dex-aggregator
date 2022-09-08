@@ -1,4 +1,5 @@
-// import { useState } from "react";
+/* eslint-disable no-undef */
+import { useState } from "react";
 import styled from "styled-components";
 import Logo from "../assets/eth-logo.png";
 
@@ -36,10 +37,37 @@ const StyledTitle = styled.div`
     font-weight: bold;
     `
 
+const Content = styled.div`
+    width: 100%;
+    padding: 0 max(calc(50vw - 550px), 20px);
+    `    
+const Wrapper = styled.div`
+    font-size: 1.1rem;
+    `
     
 const WalletManager = () => {
+
+    const [ content, setContent ] = useState(getButtonText());
+
+    function getButtonText() {
+        if (typeof ethereum === "undefined") {
+            return "Enable Ethereum"
+        } else if (!ethereum.selectedAddress) {
+            return "Connect Wallet"
+        } else {
+            return `${ethereum.selectedAddress.slice(0, 6)}...${ethereum.selectedAddress.slice(-4)}`
+        }
+    }
+
+    async function connectWallet() {
+        if (typeof ethereum !== "undefined") {
+            await ethereum.request({ method: "eth_requestAccounts" })
+            setContent(getButtonText())
+        }
+    }
+
     return (
-        <ConnectButton>Connect Wallet</ConnectButton>   
+        <ConnectButton onClick={connectWallet}>{content}</ConnectButton>   
         )
     }
 
@@ -51,10 +79,15 @@ const NavBar = () => (
     </Nav>
 )
 
+
 // Layout component
 
-const Layout = () => (
-    <NavBar></NavBar>
+const Layout = ({ children }) => (
+    <Wrapper>
+        <NavBar></NavBar>
+        <Content>{children}</Content>
+    </Wrapper>
+
 )
 
 // Exports
