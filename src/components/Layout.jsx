@@ -70,6 +70,10 @@ const Wallet = styled.div`
     `
 
 const Chain = styled.button`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     font-size: 1.1rem;
     border: 1px solid var(--light-dark);
     border-radius: 8px;
@@ -80,8 +84,8 @@ const Chain = styled.button`
     }
     `
 const ChainIcon = styled.img`
-    width: 0.8rem;
-    height: 0.8rem;
+    width: 0.9rem;
+    height: 0.9rem;
     object-fit: contain;
     margin-right: 0.75rem;
     `
@@ -189,20 +193,27 @@ const WalletManager = () => {
     async function requestSwitch(chainId) {
         if (typeof ethereum !== "undefined") {
             setChainSelectActive(false)
-            await ethereum.request({
-                method: "wallet_addEthereumChain",
-                params: [{
-                    chainId,
-                    chainName: chains[chainId].fullName,
-                    nativeCurrency: {
-                        name: chains[chainId].token.toUpperCase(),
-                        symbol: chains[chainId].token.toUpperCase(),
-                        decimals: 18
-                    },
-                    rpcUrls: [chains[chainId].rpc],
-                    blockExplorerUrls: [chains[chainId].explorer]
-                }]
-            })
+            try {
+                await ethereum.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [{ chainId }]
+                })
+            } catch {
+                await ethereum.request({
+                    method: "wallet_addEthereumChain",
+                    params: [{
+                        chainId,
+                        chainName: chains[chainId].fullName,
+                        nativeCurrency: {
+                            name: chains[chainId].token.toUpperCase(),
+                            symbol: chains[chainId].token.toUpperCase(),
+                            decimals: 18
+                        },
+                        rpcUrls: [chains[chainId].rpc],
+                        blockExplorerUrls: [chains[chainId].explorer]
+                    }]
+                })
+            }
         }
     }
 
