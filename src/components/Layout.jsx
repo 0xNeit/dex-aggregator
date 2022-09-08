@@ -188,8 +188,9 @@ const WalletManager = () => {
 
     async function requestSwitch(chainId) {
         if (typeof ethereum !== "undefined") {
+            setChainSelectActive(false)
             await ethereum.request({
-                method: "eth_addEthereumChain",
+                method: "wallet_addEthereumChain",
                 params: [{
                     chainId,
                     chainName: chains[chainId].fullName,
@@ -220,7 +221,7 @@ const WalletManager = () => {
             {chainSelectActive ? (
                     <ChainSelect>
                         {chainIds.slice(0, chainIds.indexOf(activeChain)).concat(chainIds.slice(chainIds.indexOf(activeChain) + 1)).map(chainId => (
-                            <SwitchChain onClick={() => requestSwitch(chainId)}>
+                            <SwitchChain onClick={() => requestSwitch(chainId)} key={chainId}>
                                 <SwitchIcon src={`/tokens/${chains[chainId].token}.svg`} />
                                 {chains[chainId].name}
                             </SwitchChain>
