@@ -43,7 +43,6 @@ function useEthereum() {
     // Check window.ethereum enabled
 
     useEffect(() => {
-        setEnabled(typeof ethereum !== "undefined")
         const interval = setInterval(() => {
             setEnabled(typeof ethereum !== "undefined")
         }, 200)
