@@ -20,14 +20,14 @@ for (const id in chainData) {
 
 function useEthereum() {
     // Ethereum application state
-    const [ enabled, setEnabled ] = useState(typeof ethereum !== "undefined")
+   const [ enabled, setEnabled ] = useState(false)
     const [ chain, setChain ] = useState(chains["0x1"])
-    const [ account, setAccount ] = useState(enabled ? ethereum.selectedAddress : null)
+    const [ account, setAccount ] = useState(null)
 
     // Update active account
 
     function updateAccount() {
-        if (!enabled) {
+        if (typeof ethereum === "undefined") {
             setAccount(ethereum.selectedAddress)
         }
     }
@@ -35,10 +35,18 @@ function useEthereum() {
     // Update active chain
 
     function updateChain() {
-        if (enabled && chains[ethereum.chainId]) {
+        if (typeof ethereum === "undefined" && chains[ethereum.chainId]) {
             setChain(chains[ethereum.chainId])
         }
     }
+
+    // Run initial client side update
+
+    useEffect(() => {
+        setEnabled(typeof ethereum !== "undefined")
+        updateAccount()
+        updateChain()
+    }, [])
 
     // Check window.ethereum enabled
 
@@ -52,13 +60,13 @@ function useEthereum() {
     // Set MetaMask listeners
 
     useEffect(() => {
-        if (enabled && !ethereum.initialized) {
+        if (typeof ethereum !== "undefined" && !ethereum.initialized) {
             ethereum.initialized = true
             ethereum.on("accountsChanged", updateAccount)
             ethereum.on("chainChanged", updateChain)
         }
         return () => {
-            if (enabled) {
+            if (typeof ethereum !== "undefined") {
                 ethereum.initialized = false
                 ethereum.removeListener("accountsChanged", updateAccount)
                 ethereum.removeListener("chainChanged", updateChain)

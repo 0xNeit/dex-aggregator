@@ -171,7 +171,7 @@ const WalletManager = () => {
     return (
         <Wallet>
             <Chain onClick={() => setChainSelectActive(!chainSelectActive)}>
-                <ChainIcon src={`/chains/${chain.id}.svg`} />
+                <ChainIcon src={`/chains/${chain.id}.svg`}/>
                 {chain.name}
             </Chain>
             <ConnectButton onClick={requestConnect}>

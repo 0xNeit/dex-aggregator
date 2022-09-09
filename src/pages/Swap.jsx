@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 
@@ -10,23 +9,6 @@ const Content = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
     padding: 40px 0;
-    `
-
-const SectionNav = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    `
-
-const NavButton = styled.div`
-    font-size: 2.5rem;
-    font-weight: bold;
-    background-color: transparent;
-    border: none;
-    &:first-child {
-        margin-right: 64px;
-    }
     `
 
 const Input = styled.input`
@@ -56,11 +38,12 @@ const StyledImage = styled.img`
     object-fit: contain;
     `
 
-const Settings = styled.div`
+/* const Settings = styled.div`
     width: 100%;
     height: 100%;
     margin: 40px 0;
     `
+*/
 
 const TokenSection = styled.div`
     width: 100%;
@@ -142,29 +125,17 @@ const SwapInterface = () => {
     )
 }
 
-const SwapSettings = () => {
+/* const SwapSettings = () => {
     return (
         <Settings>This is the settings</Settings>
     )
-}
+} */
 
 const Swap = () => {
-
-    const [ section, setSection ] = useState("swap")
 
     return (
         <Content>
             <SwapInterface>
-                <SectionNav>
-                    <NavButton
-                        style={{ color: `var(--${section === "swap" ? "black" : "gray"})` }}
-                        onClick={() => setSection("swap")}>Swap
-                    </NavButton>
-                    <NavButton
-                        style={{ color: `var(--${section === "settings" ? "black" : "gray"})` }}
-                        onClick={() => setSection("settings")}>Settings</NavButton>
-                </SectionNav>
-                {section === "swap" ? <SwapInterface></SwapInterface> : section === "settings" ? <SwapSettings></SwapSettings> : <></>}
             </SwapInterface>
         </Content>
     )
