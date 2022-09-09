@@ -1,5 +1,3 @@
-// Files and modules
-
 import { useEffect, useState } from "react"
 
 // Swap data hook

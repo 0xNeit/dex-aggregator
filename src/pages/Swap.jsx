@@ -1,3 +1,5 @@
+import useEthereum from "../hooks/useEthereum"
+import { useState } from "react"
 import styled from "styled-components";
 
 
@@ -12,7 +14,7 @@ const Content = styled.div`
     `
 
 const Input = styled.input`
-    width: 65%;
+    width: 45%;
     font-size: 1.2rem;
     outline: none;
     border: 1px solid var(--light-gray);
@@ -25,6 +27,7 @@ const Input = styled.input`
     `
 
 const StyledInterface = styled.div`
+    position: relative;
     width: 300px;
     display: flex;
     flex-direction: column;
@@ -69,7 +72,7 @@ const Switch = styled.button`
     `
 
 const Output = styled.input`
-    width: 65%;
+    width: 45%;
     font-size: 1.2rem;
     border: 1px solid var(--light-gray);
     border-radius: 8px;
@@ -92,12 +95,13 @@ const SwapButton = styled.button`
     `
 
 const Select = styled.button`
-    width: 30%;
+    width: 50%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     font-size: 1.2rem;
+    overflow: hidden;
     padding: 9px 0;
     `
 const ArrowIcon = styled.img`
@@ -106,6 +110,33 @@ const ArrowIcon = styled.img`
     object-fit: contain;
     margin-left: 0.5rem;
     `
+const Menu = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    `
+
+const Label = styled.div`
+    color: var(--dark-gray);
+    margin-top: auto;
+    margin-left: auto;
+    &:first-child {
+        margin-bottom: 16px;
+    }
+`
+
+const Middle = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 16px 0;
+`
+
 
 const SwapInput = ({ backgroundColor }) => {
     // Component
@@ -115,29 +146,44 @@ const SwapInput = ({ backgroundColor }) => {
     )
 }
 
-const TokenSelect = () => (
-    <Select>
-        WETH
-        <ArrowIcon src="/icons/arrow-down.svg" />
-    </Select>
-)
+const TokenSelect = ({ tokens, token, setToken }) => {
+
+    const [ menuActive, setMenuActive ] = useState(false)
+
+    // component
+    return (
+    <>
+        <Select onClick={() => setMenuActive(true)}>
+            {token ? token.symbol.length > 9 ? `${token.symbol.slice(0, 8)}...` : token.symbol : "Choose"}
+            <ArrowIcon src="/icons/arrow-down.svg" />        
+        </Select>
+        {menuActive ? <Menu></Menu> : <></>}
+    </>
+    )
+}
 
 
 
 const SwapInterface = () => {
 
+    const { chain } = useEthereum()
+
     return (
         <StyledInterface>
-            <TokenSection>
-                <SwapInput></SwapInput>
-                <TokenSelect></TokenSelect>
-            </TokenSection>
-            <Switch>
-                <StyledImage src="/icons/switch.svg" />
-            </Switch>
+            <Label>Input Token</Label>
+                <TokenSection>
+                    <SwapInput></SwapInput>
+                    <TokenSelect tokens={chain.tokens} token={chain.swap.tokenIn} setToken={chain.swap.setTokenIn}></TokenSelect>
+                </TokenSection>
+                <Middle>
+                    <Switch>
+                        <StyledImage src="/icons/switch.svg" />
+                    </Switch>
+                    <Label>Output Token</Label>
+                </Middle>
             <TokenSection>
                 <Output></Output>
-                <TokenSelect></TokenSelect>
+                <TokenSelect tokens={chain.tokens} token={chain.swap.tokenOut} setToken={chain.swap.setTokenOut}></TokenSelect>
             </TokenSection>
             <SwapButton>Swap Tokens</SwapButton>
         </StyledInterface>

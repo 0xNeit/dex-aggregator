@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
 import chainData from "../data/chains"
 import { useEffect, useState } from "react"
+import useSwap from "./useSwap"
 import Web3 from "web3"
 
 // Load Ethereum data
 
 const web3 = new Web3()
+const BN = n => new web3.utils.BN(n)
 const chains = {}
 for (const id in chainData) {
     chains[id] = {
@@ -23,6 +25,11 @@ function useEthereum() {
     const [ enabled, setEnabled ] = useState(false)
     const [ chain, setChain ] = useState(chains["0x1"])
     const [ account, setAccount ] = useState(null)
+
+    for (const id in chains) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        chains[id].swap = useSwap(chains[id])
+    }
 
     // Update active account
 
@@ -72,6 +79,7 @@ function useEthereum() {
     return {
         enabled,
         web3,
+        BN,
         chain,
         account,
         chains

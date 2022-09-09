@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useEthereum, { chains } from "../hooks/useEthereum";
 import styled from "styled-components";
 import logo from "../assets/eth-logo.png";
@@ -97,6 +97,7 @@ const ChainSelect = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    z-index: 1;
     border: 1px solid var(--light-dark);
     border-radius: 8px;
     `
@@ -107,6 +108,7 @@ const SwitchChain = styled.button`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    background-color: var(--background);
     padding: 8px 16px;
     &:first-child {
         border-radius: 8px 8px 0 0;
@@ -168,9 +170,25 @@ const WalletManager = () => {
         }
     }
 
+    // Detect click off chain select
+
+    useEffect(() => {
+        function clickOff(event) {
+            if (
+                document.getElementById("chain-select") &&
+                !event.path.includes(document.getElementById("select-chain")) &&
+                !event.path.includes(document.getElementById("chain-select"))
+            ) {
+                setChainSelectActive(false)
+            }
+        }
+        document.documentElement.addEventListener("click", clickOff)
+        return () => document.documentElement.removeEventListener("click", clickOff)
+    }, [])
+
     return (
         <Wallet>
-            <Chain onClick={() => setChainSelectActive(!chainSelectActive)}>
+            <Chain id="select-chain" onClick={() => setChainSelectActive(!chainSelectActive)}>
                 <ChainIcon src={`/chains/${chain.id}.svg`}/>
                 {chain.name}
             </Chain>
@@ -181,7 +199,7 @@ const WalletManager = () => {
                 </ConnectContent>
             </ConnectButton>
             {chainSelectActive ? (
-                    <ChainSelect>
+                    <ChainSelect id="chain-select">
                         {chainIds.slice(0, chainIds.indexOf(chain.id)).concat(chainIds.slice(chainIds.indexOf(chain.id) + 1)).map(chainId => (
                             <SwitchChain onClick={() => requestSwitch(chainId)} key={chainId}>
                                 <SwitchIcon src={`/chains/${chainId}.svg`} />
