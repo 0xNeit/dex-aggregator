@@ -1,10 +1,12 @@
-/* eslint-disable no-undef */
+
 import { useEffect, useState } from "react";
 import useEthereum, { chains } from "../hooks/useEthereum";
 import styled from "styled-components";
 import logo from "../assets/eth-logo.png";
 
 const chainIds = Object.keys(chains)
+
+const { ethereum } = window
 
 const Nav = styled.div`
     width: 100%;

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 // Files and modules
 
 import chainData from "../data/chains"
@@ -7,6 +6,8 @@ import { createContext, useEffect, useState } from "react"
 import Web3 from "web3"
 
 // Load Ethereum data
+
+const { ethereum } = window
 
 const web3 = new Web3()
 const BN = n => new web3.utils.BN(n)
