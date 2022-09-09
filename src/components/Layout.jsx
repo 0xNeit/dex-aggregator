@@ -1,9 +1,8 @@
 /* eslint-disable no-undef */
 import { useEffect, useState } from "react";
+import useEthereum from "../hooks/useEthereum";
 import styled from "styled-components";
-import chains from "../data/chains";
 import logo from "../assets/eth-logo.png";
-import walleticon from "../data/icons/wallet.svg";
 
 const chainIds = Object.keys(chains)
 
@@ -128,7 +127,6 @@ const SwitchIcon = styled.img`
     `
 
 const WalletManager = () => {
-
     useEthereum()
     const [ buttonText, setButtonText ] = useState("Enable Ethereum")
     const [ activeChain, setActiveChain ] = useState("0x1")
@@ -226,7 +224,7 @@ const WalletManager = () => {
             </Chain>
             <ConnectButton onClick={requestConnect}>
                 <ConnectContent>
-                    <ConnectIcon src={walleticon} />
+                    <ConnectIcon src="/icons/wallet.svg" />
                     {buttonText}
                 </ConnectContent>
             </ConnectButton>

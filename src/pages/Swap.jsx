@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import swapicon from "../data/icons/switch.svg";
 
 
 const Content = styled.div`
@@ -132,7 +131,7 @@ const SwapInterface = () => {
                 <TokenSelect></TokenSelect>
             </TokenSection>
             <Switch>
-                <StyledImage src={swapicon} />
+                <StyledImage src="/icons/switch.svg" />
             </Switch>
             <TokenSection>
                 <Output></Output>
