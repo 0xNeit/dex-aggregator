@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import { useEffect, useState } from "react";
-import useEthereum from "../hooks/useEthereum";
+import { useState } from "react";
+import useEthereum, { chains } from "../hooks/useEthereum";
 import styled from "styled-components";
 import logo from "../assets/eth-logo.png";
 
@@ -127,110 +127,62 @@ const SwitchIcon = styled.img`
     `
 
 const WalletManager = () => {
-    useEthereum()
-    const [ buttonText, setButtonText ] = useState("Enable Ethereum")
-    const [ activeChain, setActiveChain ] = useState("0x1")
+    // Wallet data
+
+    const { enabled, chain, account } = useEthereum()
     const [ chainSelectActive, setChainSelectActive ] = useState(false)
 
-    useEffect(() => {
-        updateButtonText()
-        updateActiveChain()
-    }, [])
-
-    useEffect(() => {
-        // Set MetaMask listeners
-
-        if (typeof ethereum !== "undefined" && !ethereum.walletInitialized) {
-            ethereum.walletInitialized = true
-            ethereum.on("accountsChanged", updateButtonText)
-            ethereum.on("chainChanged", updateActiveChain)
-        }
-
-        // Remove MetaMask listeners
-
-        return () => {
-            if (typeof ethereum !== "undefined") {
-                ethereum.walletInitialized = false
-                ethereum.removeListener("accountsChanged", updateButtonText)
-                ethereum.removeListener("chainChanged", updateActiveChain)
-            }
-        }
-    })
-
-    // Get button text
-
-    function updateButtonText() {
-        if (typeof ethereum === "undefined") {
-            setButtonText("Enable Ethereum")
-        } else if (!ethereum.selectedAddress) {
-            setButtonText("Connect Wallet")
-        } else {
-            setButtonText(`${ethereum.selectedAddress.slice(0, 6)}...${ethereum.selectedAddress.slice(-4)}`)
-        }
-    }
-
-    // Get active chain
-
-    function updateActiveChain() {
-        if (typeof ethereum === "undefined" || !ethereum.selectedAddress) {
-            setActiveChain("0x1")
-        } else if (chains[ethereum.chainId]) {
-            setActiveChain(ethereum.chainId)
-        }
-    }
 
     // Connect to MetaMask
 
     async function requestConnect() {
-        if (typeof ethereum !== "undefined") {
-            await ethereum.request({ method: "eth_requestAccounts" })
-        }
+        if (!enabled) return
+        await ethereum.request({ method: "eth_requestAccounts" })
     }
 
     // Switch wallet to chain ID
 
     async function requestSwitch(chainId) {
-        if (typeof ethereum !== "undefined") {
-            setChainSelectActive(false)
-            try {
-                await ethereum.request({
-                    method: "wallet_switchEthereumChain",
-                    params: [{ chainId }]
-                })
-            } catch {
-                await ethereum.request({
-                    method: "wallet_addEthereumChain",
-                    params: [{
-                        chainId,
-                        chainName: chains[chainId].fullName,
-                        nativeCurrency: {
-                            name: chains[chainId].token,
-                            symbol: chains[chainId].token,
-                            decimals: 18
-                        },
-                        rpcUrls: [chains[chainId].rpc],
-                        blockExplorerUrls: [chains[chainId].explorer]
-                    }]
-                })
-            }
+        if (!enabled) return
+        setChainSelectActive(false)
+        try {
+            await ethereum.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId }]
+            })
+        } catch {
+            await ethereum.request({
+                method: "wallet_addEthereumChain",
+                params: [{
+                    chainId,
+                    chainName: chains[chainId].fullName,
+                    nativeCurrency: {
+                        name: chains[chainId].token,
+                        symbol: chains[chainId].token,
+                        decimals: 18
+                    },
+                    rpcUrls: [chains[chainId].rpc],
+                    blockExplorerUrls: [chains[chainId].explorer]
+                }]
+            })
         }
     }
 
     return (
         <Wallet>
             <Chain onClick={() => setChainSelectActive(!chainSelectActive)}>
-                <ChainIcon src={`/chains/${activeChain}.svg`} />
-                {chains[activeChain].name}
+                <ChainIcon src={`/chains/${chain.id}.svg`} />
+                {chain.name}
             </Chain>
             <ConnectButton onClick={requestConnect}>
                 <ConnectContent>
                     <ConnectIcon src="/icons/wallet.svg" />
-                    {buttonText}
+                    {enabled ? account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet" : "Enable Ethereum"}
                 </ConnectContent>
             </ConnectButton>
             {chainSelectActive ? (
                     <ChainSelect>
-                        {chainIds.slice(0, chainIds.indexOf(activeChain)).concat(chainIds.slice(chainIds.indexOf(activeChain) + 1)).map(chainId => (
+                        {chainIds.slice(0, chainIds.indexOf(chain.id)).concat(chainIds.slice(chainIds.indexOf(chain.id) + 1)).map(chainId => (
                             <SwitchChain onClick={() => requestSwitch(chainId)} key={chainId}>
                                 <SwitchIcon src={`/chains/${chainId}.svg`} />
                                 {chains[chainId].name}
@@ -265,4 +217,3 @@ const Layout = ({ children }) => (
 
 // Exports
 export default Layout
-
