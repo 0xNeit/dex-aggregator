@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import chains from "../data/chains";
 import logo from "../assets/eth-logo.png";
-import walleticon from "../assets/wallet.svg";
+import walleticon from "../data/icons/wallet.svg";
 
 const chainIds = Object.keys(chains)
 
@@ -129,6 +129,7 @@ const SwitchIcon = styled.img`
 
 const WalletManager = () => {
 
+    useEthereum()
     const [ buttonText, setButtonText ] = useState("Enable Ethereum")
     const [ activeChain, setActiveChain ] = useState("0x1")
     const [ chainSelectActive, setChainSelectActive ] = useState(false)
@@ -205,8 +206,8 @@ const WalletManager = () => {
                         chainId,
                         chainName: chains[chainId].fullName,
                         nativeCurrency: {
-                            name: chains[chainId].token.toUpperCase(),
-                            symbol: chains[chainId].token.toUpperCase(),
+                            name: chains[chainId].token,
+                            symbol: chains[chainId].token,
                             decimals: 18
                         },
                         rpcUrls: [chains[chainId].rpc],
@@ -220,7 +221,7 @@ const WalletManager = () => {
     return (
         <Wallet>
             <Chain onClick={() => setChainSelectActive(!chainSelectActive)}>
-                <ChainIcon src={`/tokens/${chains[activeChain].token}.svg`} />
+                <ChainIcon src={`/chains/${activeChain}.svg`} />
                 {chains[activeChain].name}
             </Chain>
             <ConnectButton onClick={requestConnect}>
@@ -233,7 +234,7 @@ const WalletManager = () => {
                     <ChainSelect>
                         {chainIds.slice(0, chainIds.indexOf(activeChain)).concat(chainIds.slice(chainIds.indexOf(activeChain) + 1)).map(chainId => (
                             <SwitchChain onClick={() => requestSwitch(chainId)} key={chainId}>
-                                <SwitchIcon src={`/tokens/${chains[chainId].token}.svg`} />
+                                <SwitchIcon src={`/chains/${chainId}.svg`} />
                                 {chains[chainId].name}
                             </SwitchChain>
                         ))}

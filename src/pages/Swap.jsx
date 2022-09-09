@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import swapicon from "../assets/swap.svg";
+import swapicon from "../data/icons/switch.svg";
 
 
 const Content = styled.div`
