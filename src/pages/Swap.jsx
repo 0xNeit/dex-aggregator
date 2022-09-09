@@ -91,6 +91,22 @@ const SwapButton = styled.button`
     }
     `
 
+const Select = styled.button`
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    padding: 9px 0;
+    `
+const ArrowIcon = styled.img`
+    width: 0.9rem;
+    height: 0.9rem;
+    object-fit: contain;
+    margin-left: 0.5rem;
+    `
+
 const SwapInput = ({ backgroundColor }) => {
     // Component
 
@@ -100,7 +116,10 @@ const SwapInput = ({ backgroundColor }) => {
 }
 
 const TokenSelect = () => (
-    <>this is token select</>
+    <Select>
+        WETH
+        <ArrowIcon src="/icons/arrow-down.svg" />
+    </Select>
 )
 
 

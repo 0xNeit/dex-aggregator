@@ -20,7 +20,7 @@ for (const id in chainData) {
 
 function useEthereum() {
     // Ethereum application state
-   const [ enabled, setEnabled ] = useState(false)
+    const [ enabled, setEnabled ] = useState(false)
     const [ chain, setChain ] = useState(chains["0x1"])
     const [ account, setAccount ] = useState(null)
 
@@ -47,15 +47,7 @@ function useEthereum() {
         updateAccount()
         updateChain()
     }, [])
-
-    // Check window.ethereum enabled
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setEnabled(typeof ethereum !== "undefined")
-        }, 200)
-        return () => clearInterval(interval)
-    }, [])
+    
 
     // Set MetaMask listeners
 
