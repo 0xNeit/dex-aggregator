@@ -1,5 +1,5 @@
-import useEthereum from "../hooks/useEthereum"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import EthereumContext from "../state/EthereumContext";
 // import usePrice from "../hooks/usePrice";
 import styled from "styled-components";
 
@@ -171,7 +171,7 @@ const TokenSelect = ({ tokens, token, setToken }) => {
 
 const SwapInterface = () => {
 
-    const { chain } = useEthereum()
+    const { chain } = useContext(EthereumContext)
 
     return (
         <StyledInterface>

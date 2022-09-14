@@ -1,6 +1,6 @@
 
-import { useEffect, useState } from "react";
-import useEthereum, { chains } from "../hooks/useEthereum";
+import { useEffect, useContext, useState } from "react";
+import EthereumContext, { chains } from "../state/EthereumContext";
 import styled from "styled-components";
 import logo from "../assets/eth-logo.png";
 
@@ -133,7 +133,7 @@ const SwitchIcon = styled.img`
 const WalletManager = () => {
     // Wallet data
 
-    const { enabled, chain, account } = useEthereum()
+    const { enabled, chain, account } = useContext(EthereumContext)
     const [ chainSelectActive, setChainSelectActive ] = useState(false)
 
 
