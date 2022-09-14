@@ -1,5 +1,6 @@
 import { useContext, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
+import PriceContext from "../state/PriceContext";
 // import usePrice from "../hooks/usePrice";
 import styled from "styled-components";
 
@@ -89,10 +90,14 @@ const SwapButton = styled.button`
     border: 1px solid var(--background);
     border-radius: 8px;
     padding: 12px 0;
-    margin-top: 18px;
+    margin: 24px 0;
     &:hover {
         border: 1px solid var(--light-dark);
     }
+    `
+
+const SwapInfo = styled.div`
+    margin-bottom: 6px;
     `
 
 const Select = styled.button`
@@ -121,12 +126,10 @@ const Menu = styled.div`
     `
 
 const Label = styled.div`
+    position: relative;
     color: var(--dark-gray);
     margin-top: auto;
     margin-left: auto;
-    &:first-child {
-        margin-bottom: 16px;
-    }
 `
 
 const Middle = styled.div`
@@ -135,7 +138,7 @@ const Middle = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    margin: 16px 0;
+    margin: 24px 0;
 `
 
 
@@ -172,10 +175,17 @@ const TokenSelect = ({ tokens, token, setToken }) => {
 const SwapInterface = () => {
 
     const { chain } = useContext(EthereumContext)
+    const prices = useContext(PriceContext)
+
+    // Calculate swap info
+
+    function getSwapInfo() {
+        return `1 ... = ...`
+    }
 
     return (
         <StyledInterface>
-            <Label>Input Token</Label>
+            <Label style={{ marginBottom: "12px" }}>Input Token</Label>
                 <TokenSection>
                     <SwapInput></SwapInput>
                     <TokenSelect tokens={chain.tokens} token={chain.swap.tokenIn} setToken={chain.swap.setTokenIn}></TokenSelect>
@@ -184,13 +194,15 @@ const SwapInterface = () => {
                     <Switch>
                         <StyledImage src="/icons/switch.svg" />
                     </Switch>
-                    <Label>Output Token</Label>
+                    <Label style={{ top: "12px" }}>Output Token</Label>
                 </Middle>
             <TokenSection>
                 <Output></Output>
                 <TokenSelect tokens={chain.tokens} token={chain.swap.tokenOut} setToken={chain.swap.setTokenOut}></TokenSelect>
             </TokenSection>
             <SwapButton>Swap Tokens</SwapButton>
+            <SwapInfo>{getSwapInfo()}</SwapInfo>
+            <SwapInfo style={{ marginBottom: "0" }}>{getSwapInfo()}</SwapInfo>
         </StyledInterface>
     )
 }
