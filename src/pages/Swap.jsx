@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
 import PriceContext from "../state/PriceContext";
 // import usePrice from "../hooks/usePrice";
@@ -154,8 +154,8 @@ const ExitButton = styled.button`
 `
 
 const ExitIcon = styled.img`
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 `
 
@@ -187,7 +187,7 @@ const Search = styled.input`
 
 const Tokens = styled.div`
     width: 100%;
-    height: 100%;
+    height: calc(100% - 1.2rem - 16px - 1rem - 14px - 16px - 1px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -243,9 +243,33 @@ const SwapInput = ({ backgroundColor }) => {
     )
 }
 
-const TokenSelect = ({ label, token, setToken, tokens }) => {
-
+const TokenSelect = ({ label, type, chain }) => {
+    // Token selection menu data
+    const token = chain.swap[type === "input" ? "tokenIn" : "tokenOut"]
+    const setToken = chain.swap[type === "input" ? "setTokenIn" : "setTokenOut"]
     const [ menuActive, setMenuActive ] = useState(false)
+    const [ tokenList, setTokenList ] = useState(chain.tokens)
+
+    // Update token search
+
+    function updateTokenList(event) {
+        const query = event.target.value
+        console.log(query)
+    }
+
+    // Switch to selected token
+
+    function switchToken(token) {
+        setToken(token)
+        setMenuActive(false)
+    }
+
+    // Update token list on chain changes
+
+    useEffect(() => {
+        setTokenList(chain.tokens)
+    }, [chain])
+
     // const eth = usePrice("ETH")
     // const btc = usePrice("BTC")
     // const bnb = usePrice("BNB")
@@ -268,11 +292,11 @@ const TokenSelect = ({ label, token, setToken, tokens }) => {
                     </Header>
                     <TokenSearch>
                         <SearchIcon src="/icons/search.svg" />
-                        <Search></Search>
+                        <Search onChange={updateTokenList}></Search>
                     </TokenSearch>
                     <Tokens>
-                        {tokens.map((token, i) => (
-                            <Token key={i}>
+                        {tokenList.map((token, i) => (
+                            <Token key={i} onClick={() => switchToken(token)}>
                                 <Icon src={`/tokens/${token.symbol}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
@@ -305,7 +329,7 @@ const SwapInterface = () => {
             <Label style={{ marginBottom: "12px" }}>Input Token</Label>
                 <TokenSection>
                     <SwapInput></SwapInput>
-                    <TokenSelect label="Input Token" token={chain.swap.tokenIn} setToken={chain.swap.setTokenIn} tokens={chain.tokens}></TokenSelect>
+                    <TokenSelect label="Input Token" type="input" chain={chain}></TokenSelect>
                 </TokenSection>
                 <Middle>
                     <Switch>
@@ -315,7 +339,7 @@ const SwapInterface = () => {
                 </Middle>
             <TokenSection>
                 <Output></Output>
-                <TokenSelect label="Output Token" token={chain.swap.tokenOut} setToken={chain.swap.setTokenOut} tokens={chain.tokens}></TokenSelect>
+                <TokenSelect label="Output Token" type="output" chain={chain}></TokenSelect>
             </TokenSection>
             <SwapButton>Swap Tokens</SwapButton>
             <SwapInfo>{getSwapInfo()}</SwapInfo>
