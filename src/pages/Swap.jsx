@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
-import PriceContext from "../state/PriceContext";
-// import usePrice from "../hooks/usePrice";
+// import PriceContext from "../state/PriceContext";
 import styled from "styled-components";
 
 
@@ -265,19 +264,18 @@ const TokenSelect = ({ label, type, chain }) => {
         setMenuActive(false)
     }
 
-    // Update token list on chain changes
+    // Update token list on data changes
 
     useEffect(() => {
         if (opposite) {
-            const index = chain.tokens.find(token => opposite.address === token.address)
+            const index = chain.tokens.findIndex(token => opposite.address === token.address)
             if (index !== -1) {
                 setTokenList(chain.tokens.slice(0, index).concat(chain.tokens.slice(index + 1)))
                 return
             }
         }
         setTokenList(chain.tokens)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chain])
+    }, [chain, opposite])
 
     // const eth = usePrice("ETH")
     // const btc = usePrice("BTC")
@@ -305,7 +303,7 @@ const TokenSelect = ({ label, type, chain }) => {
                     </TokenSearch>
                     <Tokens>
                         {tokenList.map(token => (
-                            <Token key={token.address} onClick={() => switchToken(token)}>
+                            <Token key={`${type}-${token.address}`} onClick={() => switchToken(token)}>
                                 <Icon src={`/tokens/${token.symbol}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
@@ -325,7 +323,7 @@ const TokenSelect = ({ label, type, chain }) => {
 const SwapInterface = () => {
 
     const { chain } = useContext(EthereumContext)
-    const prices = useContext(PriceContext)
+    // const prices = useContext(PriceContext)
 
     // Calculate swap info
 
