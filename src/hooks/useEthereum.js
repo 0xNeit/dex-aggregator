@@ -1,5 +1,6 @@
 import chainData from "../data/chains"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import useGlobalState from "./useGlobalState"
 import useSwap from "./useSwap"
 import Web3 from "web3"
 
@@ -23,13 +24,15 @@ for (const id in chainData) {
 
 function useEthereum() {
     // Ethereum application state
-    const [ enabled, setEnabled ] = useState(false)
-    const [ chain, setChain ] = useState(chains["0x1"])
-    const [ account, setAccount ] = useState(null)
+    const [ enabled, setEnabled ] = useGlobalState("enabled", false) // non-responsive
+    const [ chain, setChain ] = useGlobalState("chain", chains["0x1"])
+    const [ account, setAccount ] = useGlobalState("account", null)
 
     for (const id in chains) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        chains[id].swap = useSwap(chains[id])
+        if (!chains[id].swap) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            chains[id].swap = useSwap(chains[id])
+        }
     }
 
     // Update active account
@@ -51,23 +54,34 @@ function useEthereum() {
     // Run initial client side update
 
     useEffect(() => {
-        setEnabled(typeof ethereum !== "undefined")
-        updateAccount()
-        updateChain()
+        console.log("running my use effect")
+        console.log(typeof window)
+        if (typeof window !== "undefined" && !window.ethereumInitialized) {
+            window.ethereumInitialized = true
+            setEnabled(typeof ethereum !== "undefined")
+            updateAccount()
+            updateChain()
+        }
+        return () => {
+            if (window.ethereumInitialized) {
+                window.ethereumInitialized = false
+            }
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
 
     // Set MetaMask listeners
 
     useEffect(() => {
-        if (typeof ethereum !== "undefined" && !ethereum.initialized) {
-            ethereum.initialized = true
+        if (typeof ethereum !== "undefined" && !ethereum.listenersAdded) {
+            ethereum.listenersAdded = true
             ethereum.on("accountsChanged", updateAccount)
             ethereum.on("chainChanged", updateChain)
         }
         return () => {
-            if (typeof ethereum !== "undefined") {
-                ethereum.initialized = false
+            if (typeof ethereum !== "undefined" && ethereum.listenersAdded) {
+                ethereum.listenersAdded = false
                 ethereum.removeListener("accountsChanged", updateAccount)
                 ethereum.removeListener("chainChanged", updateChain)
             }
