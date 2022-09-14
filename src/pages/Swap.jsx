@@ -1,6 +1,6 @@
 import useEthereum from "../hooks/useEthereum"
 import { useState } from "react"
-import usePrice from "../hooks/usePrice";
+// import usePrice from "../hooks/usePrice";
 import styled from "styled-components";
 
 
@@ -150,16 +150,16 @@ const SwapInput = ({ backgroundColor }) => {
 const TokenSelect = ({ tokens, token, setToken }) => {
 
     const [ menuActive, setMenuActive ] = useState(false)
-    const eth = usePrice("ETH")
-    const btc = usePrice("BTC")
-    const bnb = usePrice("BNB")
+    // const eth = usePrice("ETH")
+    // const btc = usePrice("BTC")
+    // const bnb = usePrice("BNB")
 
     // component
     return (
     <>
         <Select onClick={() => setMenuActive(true)}>
             {token ? token.symbol.length > 9 ? `${token.symbol.slice(0, 8)}...` : token.symbol : "Choose"}
-            {eth} {btc} {bnb}
+            {/* {eth} {btc} {bnb} */}
             <ArrowIcon src="/icons/arrow-down.svg" />        
         </Select>
         {menuActive ? <Menu></Menu> : <></>}
