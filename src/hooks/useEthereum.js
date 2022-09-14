@@ -1,6 +1,5 @@
 import chainData from "../data/chains"
-import { useEffect } from "react"
-import useGlobalState from "./useGlobalState"
+import { useEffect, useState } from "react"
 import useSwap from "./useSwap"
 import Web3 from "web3"
 
@@ -24,15 +23,13 @@ for (const id in chainData) {
 
 function useEthereum() {
     // Ethereum application state
-    const [ enabled, setEnabled ] = useGlobalState("enabled", false) // non-responsive
-    const [ chain, setChain ] = useGlobalState("chain", chains["0x1"])
-    const [ account, setAccount ] = useGlobalState("account", null)
+    const [ enabled, setEnabled ] = useState(false) // non-responsive
+    const [ chain, setChain ] = useState(chains["0x1"])
+    const [ account, setAccount ] = useState(null)
 
     for (const id in chains) {
-        if (!chains[id].swap) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            chains[id].swap = useSwap(chains[id])
-        }
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        chains[id].swap = useSwap(chains[id])
     }
 
     // Update active account
@@ -54,19 +51,9 @@ function useEthereum() {
     // Run initial client side update
 
     useEffect(() => {
-        console.log("running my use effect")
-        console.log(typeof window)
-        if (typeof window !== "undefined" && !window.ethereumInitialized) {
-            window.ethereumInitialized = true
-            setEnabled(typeof ethereum !== "undefined")
-            updateAccount()
-            updateChain()
-        }
-        return () => {
-            if (window.ethereumInitialized) {
-                window.ethereumInitialized = false
-            }
-        }
+        setEnabled(typeof ethereum !== "undefined")
+        updateAccount()
+        updateChain()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
