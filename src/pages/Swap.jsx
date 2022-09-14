@@ -295,8 +295,8 @@ const TokenSelect = ({ label, type, chain }) => {
                         <Search onChange={updateTokenList}></Search>
                     </TokenSearch>
                     <Tokens>
-                        {tokenList.map((token, i) => (
-                            <Token key={i} onClick={() => switchToken(token)}>
+                        {tokenList.map(token => (
+                            <Token key={token.address} onClick={() => switchToken(token)}>
                                 <Icon src={`/tokens/${token.symbol}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
