@@ -122,7 +122,7 @@ const Menu = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: var(--background);
     `
 
 const Label = styled.div`
@@ -141,6 +141,58 @@ const Middle = styled.div`
     margin: 24px 0;
 `
 
+const Header = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 16px;
+`
+
+const ExitButton = styled.button`
+    margin-left: auto;
+`
+
+const ExitIcon = styled.img`
+    width: 0.75rem;
+    height: 0.75rem;
+    object-fit: contain;
+`
+
+const TokenSearch = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 16px;
+`
+
+const SearchIcon = styled.img`
+    width: 0.75rem;
+    height: 0.75rem;
+    object-fit: contain;
+    margin-right: 1rem;
+`
+
+const Search = styled.input`
+    width: 100%;
+    outline: none;
+    border: 1px solid var(--light-gray);
+    border-radius: 8px;
+    padding: 6px 8px;
+    &:focus {
+        border: 1px solid var(--gray);
+    }
+`
+
+const Tokens = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+`
+
 
 const SwapInput = ({ backgroundColor }) => {
     // Component
@@ -150,9 +202,10 @@ const SwapInput = ({ backgroundColor }) => {
     )
 }
 
-const TokenSelect = ({ tokens, token, setToken }) => {
+const TokenSelect = ({ label, token, setToken, tokens }) => {
 
     const [ menuActive, setMenuActive ] = useState(false)
+    console.log(tokens)
     // const eth = usePrice("ETH")
     // const btc = usePrice("BTC")
     // const bnb = usePrice("BNB")
@@ -165,7 +218,25 @@ const TokenSelect = ({ tokens, token, setToken }) => {
             {/* {eth} {btc} {bnb} */}
             <ArrowIcon src="/icons/arrow-down.svg" />        
         </Select>
-        {menuActive ? <Menu></Menu> : <></>}
+        {menuActive ? (
+                <Menu>
+                    <Header>
+                        <div>Select {label}</div>
+                        <ExitButton onClick={() => setMenuActive(false)}>
+                            <ExitIcon src="/icons/exit.svg" />
+                        </ExitButton>
+                    </Header>
+                    <TokenSearch>
+                        <SearchIcon src="/icons/search.svg" />
+                        <Search></Search>
+                    </TokenSearch>
+                    <Tokens>
+                        {tokens.map(token => (
+                            <button className="token">{token.name}</button>
+                        ))}
+                    </Tokens>
+                </Menu>
+             ) : <></>}
     </>
     )
 }
@@ -188,7 +259,7 @@ const SwapInterface = () => {
             <Label style={{ marginBottom: "12px" }}>Input Token</Label>
                 <TokenSection>
                     <SwapInput></SwapInput>
-                    <TokenSelect tokens={chain.tokens} token={chain.swap.tokenIn} setToken={chain.swap.setTokenIn}></TokenSelect>
+                    <TokenSelect label="Input Token" token={chain.swap.tokenIn} setToken={chain.swap.setTokenIn} tokens={chain.tokens}></TokenSelect>
                 </TokenSection>
                 <Middle>
                     <Switch>
@@ -198,7 +269,7 @@ const SwapInterface = () => {
                 </Middle>
             <TokenSection>
                 <Output></Output>
-                <TokenSelect tokens={chain.tokens} token={chain.swap.tokenOut} setToken={chain.swap.setTokenOut}></TokenSelect>
+                <TokenSelect label="Output Token" token={chain.swap.tokenOut} setToken={chain.swap.setTokenOut} tokens={chain.tokens}></TokenSelect>
             </TokenSection>
             <SwapButton>Swap Tokens</SwapButton>
             <SwapInfo>{getSwapInfo()}</SwapInfo>
