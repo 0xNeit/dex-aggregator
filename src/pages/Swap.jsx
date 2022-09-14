@@ -153,8 +153,8 @@ const ExitButton = styled.button`
 `
 
 const ExitIcon = styled.img`
-    width: 100%;
-    height: 100%;
+    width: 0.75rem;
+    height: 0.75rem;
     object-fit: contain;
 `
 
@@ -303,7 +303,7 @@ const TokenSelect = ({ label, type, chain }) => {
                     </TokenSearch>
                     <Tokens>
                         {tokenList.map(token => (
-                            <Token key={`${type}-${token.address}`} onClick={() => switchToken(token)}>
+                            <Token key={`${chain.id}-${type}-${token.address}`} onClick={() => switchToken(token)}>
                                 <Icon src={`/tokens/${token.symbol}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
