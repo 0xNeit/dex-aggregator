@@ -304,7 +304,7 @@ const TokenSelect = ({ label, type, chain }) => {
                     <Tokens>
                         {tokenList.map(token => (
                             <Token key={`${chain.id}-${type}-${token.address}`} onClick={() => switchToken(token)}>
-                                <Icon src={`/tokens/${token.symbol}.svg`} />
+                                <Icon src={`/tokens/${token.default ? token.symbol : "unknown"}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
                                     <Balance>0</Balance>

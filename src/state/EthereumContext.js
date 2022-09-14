@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
-import chainData from "../data/chains"
-import useSwap from "../hooks/useSwap"
 import { createContext, useEffect, useState } from "react"
+import chainData from "../data/chains"
+import useTokens from "../hooks/useTokens"
+import useSwap from "../hooks/useSwap"
 import Web3 from "web3"
 
 // Load Ethereum data
@@ -13,11 +14,7 @@ for (const id in chainData) {
     chains[id] = {
         id,
         ...chainData[id],
-        web3: new Web3(chainData[id].rpc),
-        tokens: require(`../data/tokens/${id}.json`).map(token => {
-            token.default = true
-            return token
-        })
+        web3: new Web3(chainData[id].rpc)
     }
 }
 
@@ -35,6 +32,10 @@ const EthereumContextProvider = ({ children }) => {
     // Default Ethereum application state
 
     for (const id in chains) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [ tokens, setTokens ] = useTokens(id)
+        chains[id].tokens = tokens
+        chains[id].setTokens = setTokens
         // eslint-disable-next-line react-hooks/rules-of-hooks
         chains[id].swap = useSwap(chains[id])
     }
@@ -55,6 +56,19 @@ const EthereumContextProvider = ({ children }) => {
         if (typeof ethereum !== "undefined" && chains[ethereum.chainId]) {
             setChain(chains[ethereum.chainId])
         }
+    }
+
+    // Update token balances
+
+    async function updateBalances() {
+        if (!account) return
+        /*
+        let index = 0
+        for (let t = 0; t < 5; t ++) {
+            const interval = setInterval(async () => {
+                if (index >= chain.tokens.length) return
+            })
+        }*/
     }
 
     // Run initial client side update
@@ -79,6 +93,15 @@ const EthereumContextProvider = ({ children }) => {
             }
         }
     }, [])
+
+    // Update token balances
+
+    useEffect(() => {
+        updateBalances()
+        const interval = setInterval(updateBalances, 50)
+        return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chain])
 
     // Component
 
