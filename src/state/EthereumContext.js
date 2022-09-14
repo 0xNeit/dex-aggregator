@@ -1,13 +1,10 @@
-// Files and modules
-
+/* eslint-disable no-undef */
 import chainData from "../data/chains"
 import useSwap from "../hooks/useSwap"
 import { createContext, useEffect, useState } from "react"
 import Web3 from "web3"
 
 // Load Ethereum data
-
-const { ethereum } = window
 
 const web3 = new Web3()
 const BN = n => new web3.utils.BN(n)
@@ -17,7 +14,7 @@ for (const id in chainData) {
         id,
         ...chainData[id],
         web3: new Web3(chainData[id].rpc),
-        tokens: require(`../data/tokens/${id}.json`).map(token => token.default = true)
+        tokens: require(`../data/tokens/${id}.json`)
     }
 }
 
@@ -31,7 +28,7 @@ const EthereumContext = createContext({
 
 // Ethereum context provider
 
-const EthereumContextProvider = ({ children }) => {
+const EthereumContextProvider = () => {
     // Default Ethereum application state
 
     for (const id in chains) {
@@ -90,13 +87,10 @@ const EthereumContextProvider = ({ children }) => {
             account,
             chains,
             BN
-        }}>
-            {children}
-        </EthereumContext.Provider>
+        }}></EthereumContext.Provider>
     )
 }
 
 // Exports
 
-export { EthereumContextProvider, chains }
-export default EthereumContext
+export { EthereumContext, EthereumContextProvider }
