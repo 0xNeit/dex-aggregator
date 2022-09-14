@@ -187,11 +187,52 @@ const Search = styled.input`
 
 const Tokens = styled.div`
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: auto;
+`
+
+const Token = styled.button`
+    width: calc(100% - 8px);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid var(--background);
+    border-radius: 8px;
+    padding: 12px;
+    margin-right: 8px;
+    &:hover {
+        border: 1px solid var(--light-dark);
+    }
+`
+
+const Icon = styled.img`
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+    margin-right: 1rem;
+`
+
+const Info = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
 `
+
+const Name = styled.div`
+    text-align: left;
+    margin-bottom: 3px;
+`
+
+const Balance = styled.div`
+    color: var(--gray);
+`
+
 
 
 const SwapInput = ({ backgroundColor }) => {
@@ -205,7 +246,6 @@ const SwapInput = ({ backgroundColor }) => {
 const TokenSelect = ({ label, token, setToken, tokens }) => {
 
     const [ menuActive, setMenuActive ] = useState(false)
-    console.log(tokens)
     // const eth = usePrice("ETH")
     // const btc = usePrice("BTC")
     // const bnb = usePrice("BNB")
@@ -231,8 +271,14 @@ const TokenSelect = ({ label, token, setToken, tokens }) => {
                         <Search></Search>
                     </TokenSearch>
                     <Tokens>
-                        {tokens.map(token => (
-                            <button className="token">{token.name}</button>
+                        {tokens.map((token, i) => (
+                            <Token key={i}>
+                                <Icon src={`/tokens/${token.symbol}.svg`} />
+                                <Info>
+                                    <Name>{token.name} - {token.symbol}</Name>
+                                    <Balance>0</Balance>
+                                </Info>
+                            </Token>
                         ))}
                     </Tokens>
                 </Menu>
