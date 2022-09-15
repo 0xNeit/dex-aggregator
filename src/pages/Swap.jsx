@@ -278,11 +278,6 @@ const TokenSelect = ({ label, type, chain }) => {
         setTokenList(chain.tokens)
     }, [chain, opposite])
 
-    useEffect(() => {
-        console.log("updated token balances:")
-        console.log(Object.keys(chain.tokenBalances))
-    }, [chain.tokenBalances])
-
 
     // const eth = usePrice("ETH")
     // const btc = usePrice("BTC")
