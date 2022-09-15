@@ -1,7 +1,15 @@
-function format(num) {
+function parse(num, decimals = 18) {
+    return num.toString()
+}
 
+// Format number
+
+function format(num, maxDecimals = 18) {
+    return (+num).toLocaleString(undefined, {
+        maximumFractionDigits: maxDecimals
+    })
 }
 
 // Exports
 
-export default format
+export { parse, format }

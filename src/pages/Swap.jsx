@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
+import { parse, format } from "../helpers/number"
 // import PriceContext from "../state/PriceContext";
 import styled from "styled-components";
 
@@ -277,6 +278,12 @@ const TokenSelect = ({ label, type, chain }) => {
         setTokenList(chain.tokens)
     }, [chain, opposite])
 
+    useEffect(() => {
+        console.log("updated token balances:")
+        console.log(Object.keys(chain.tokenBalances))
+    }, [chain.tokenBalances])
+
+
     // const eth = usePrice("ETH")
     // const btc = usePrice("BTC")
     // const bnb = usePrice("BNB")
@@ -307,7 +314,7 @@ const TokenSelect = ({ label, type, chain }) => {
                                 <Icon src={`/tokens/${token.default ? token.symbol : "unknown"}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
-                                    <Balance>0</Balance>
+                                    <Balance>{parse(chain.tokenBalances[token.address])}</Balance>
                                 </Info>
                             </Token>
                         ))}

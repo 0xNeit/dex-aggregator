@@ -4,7 +4,7 @@ import { createContext, useEffect, useState } from "react"
 import chainData from "../data/chains"
 import useTokens from "../hooks/useTokens"
 import useSwap from "../hooks/useSwap"
-import ERC20ABI from "../abis/ERC20.json"
+// import ERC20ABI from "../abis/ERC20.json"
 import Web3 from "web3"
 
 // Load Ethereum data
@@ -48,7 +48,7 @@ const EthereumContextProvider = ({ children }) => {
         const [ tokenBalances, setTokenBalances ] = useState(balances)
         chains[id].tokenBalances = tokenBalances
         chains[id].setTokenBalances = setTokenBalances
-        console.log(chains[id])
+        
 
         // Initialize swap state
         chains[id].swap = useSwap(chains[id])
@@ -78,6 +78,11 @@ const EthereumContextProvider = ({ children }) => {
         if (!account) return
         const balances = {}
         const tokens = Object.keys(chain.tokenBalances)
+        console.log("before update:", chain.tokenBalances, tokens)
+        for (const token of tokens) {
+            balances[token] = BN(Math.floor(Math.random() * 5))
+        }
+        /*
         let index = 0
         for (let t = 0; t < 5; t ++) {
             // Run concurrent tasks
@@ -99,7 +104,8 @@ const EthereumContextProvider = ({ children }) => {
                 }
             }, 50)
         }
-        console.log(balances)
+        console.log(balances) */
+        console.log("finished updating balances:", balances, Object.keys(balances))
         chain.setTokenBalances(balances)
     }
 
