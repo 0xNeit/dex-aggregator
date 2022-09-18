@@ -35,6 +35,7 @@ const StyledInterface = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    margin-right: 48px;
     `
     
 const StyledImage = styled.img`
@@ -43,12 +44,18 @@ const StyledImage = styled.img`
     object-fit: contain;
     `
 
-/* const Settings = styled.div`
-    width: 100%;
-    height: 100%;
-    margin: 40px 0;
+const Settings = styled.div`
+    width: calc(100% - 348px);
+    height: 100%;   
     `
-*/
+
+const Top = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    `
 
 const TokenSection = styled.div`
     width: 100%;
@@ -75,6 +82,7 @@ const Switch = styled.button`
 
 const Output = styled.input`
     width: 45%;
+    min-height: calc(1.44rem + 18px);
     font-size: 1.2rem;
     border: 1px solid var(--light-gray);
     border-radius: 8px;
@@ -346,8 +354,16 @@ const TokenSelect = ({ label, type }) => {
 
 
 const SwapInterface = () => {
-
+    const { chain } = useContext(EthereumContext)
     // const prices = useContext(PriceContext)
+
+    // Switch input and output tokens
+
+    function switchTokens() {
+        const newInput = chain.swap.tokenOut
+        chain.swap.setTokenOut(chain.swap.tokenIn)
+        chain.swap.setTokenIn(newInput)
+    }
 
     // Calculate swap info
 
@@ -363,7 +379,7 @@ const SwapInterface = () => {
                     <TokenSelect label="Input Token" type="input"></TokenSelect>
                 </TokenSection>
                 <Middle>
-                    <Switch>
+                    <Switch onClick={switchTokens}>
                         <StyledImage src="/icons/switch.svg" />
                     </Switch>
                     <Label style={{ top: "12px" }}>Output Token</Label>
@@ -379,18 +395,20 @@ const SwapInterface = () => {
     )
 }
 
-/* const SwapSettings = () => {
+const SwapSettings = () => {
     return (
         <Settings>This is the settings</Settings>
     )
-} */
+}
 
 const Swap = () => {
 
     return (
         <Content>
-            <SwapInterface>
-            </SwapInterface>
+            <Top>
+                <SwapInterface></SwapInterface>
+                <SwapSettings></SwapSettings>
+            </Top>
         </Content>
     )
 }

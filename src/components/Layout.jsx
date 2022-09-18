@@ -15,7 +15,7 @@ const Nav = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    padding: 0 max(calc(50vw - 550px), 20px);
+    padding: 0 max(calc(50vw - 500px), 20px);
     `
 
 const ConnectButton = styled.button`
@@ -56,7 +56,7 @@ const StyledTitle = styled.div`
 
 const Content = styled.div`
     width: 100%;
-    padding: 0 max(calc(50vw - 550px), 20px);
+    padding: 0 max(calc(50vw - 500px), 20px);
     `    
 const Wrapper = styled.div`
     font-size: 1.1rem;
