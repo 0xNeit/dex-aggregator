@@ -154,8 +154,9 @@ const GasSwitch = styled.div`
     width: 1rem;
     height: 1rem;
     background-color: var(--light-gray);
+    border-radius: 4px;
     margin-right: 0.5rem;
-    &:checked {
+    &:data-checked {
         background-color: var(--light-dark);
     }
     `
@@ -419,7 +420,7 @@ const Slider = styled.span`
         position: absolute;
         width: calc(1.2rem - 8px);
         height: calc(1.2rem - 8px);
-        left: 4px;
+        left: 5px;
         bottom: 4px;
         content: "";
         outline: none;
@@ -428,7 +429,7 @@ const Slider = styled.span`
     &:checked {
         background-color: var(--light-dark);
         &:before {
-            transform: translateX(calc(1.8rem));
+            transform: translateX(calc(1.8rem - 2px));
         }
     }
 `
@@ -665,6 +666,7 @@ const SwapSettings = () => {
         const gas = { ...settings.gas }
         gas[chain.id] = +event.target.value
         settings.setGas(gas)
+        document.getElementById("gas-input").value = ""
     }
 
 
@@ -711,7 +713,7 @@ const SwapSettings = () => {
                     <GasLabel>Normal</GasLabel>
                     <GasSwitch data-checked={settings.gas[chain.id] === "fast"} onClick={() => updateGas("fast")}></GasSwitch>
                     <GasLabel>Fast</GasLabel>
-                    <GasInput onChange={setGas}></GasInput>
+                    <GasInput id="gas-input" onChange={setGas}></GasInput>
                 </GasControls>
             </GasSection>
         </Top>
