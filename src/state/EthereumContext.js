@@ -2,8 +2,9 @@
 /* eslint-disable no-undef */
 import { createContext, useEffect, useState } from "react"
 import chainData from "../data/chains"
-import useTokens from "../hooks/useTokens"
-import useSwap from "../hooks/useSwap"
+import useTokens from "./useTokens"
+import useSwapSettings from "./useSwapSettings"
+import useSwap from "./useSwap"
 import ERC20ABI from "../abis/ERC20.json"
 import Web3 from "web3"
 
@@ -32,7 +33,7 @@ const EthereumContext = createContext({
 
 const EthereumContextProvider = ({ children }) => {
     // Default Ethereum application state
-
+    const swapSettings = useSwapSettings(chains)
     for (const id in chains) {
         // Initialize token list
         const [ tokens, setTokens ] = useTokens(id)
@@ -52,7 +53,9 @@ const EthereumContextProvider = ({ children }) => {
 
         // Initialize swap state
         chains[id].swap = useSwap(chains[id])
+        chains[id].swapSettings = swapSettings
     }
+    
     const [ enabled, setEnabled ] = useState(false) // non-responsive
     const [ chain, setChain ] = useState(chains["0x1"])
     const [ account, setAccount ] = useState(null)

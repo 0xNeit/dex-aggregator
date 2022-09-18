@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
 import { parse, format } from "../helpers/number"
-import PriceContext from "../state/PriceContext";
+// import PriceContext from "../state/PriceContext";
 import styled from "styled-components";
 
 
@@ -347,7 +347,7 @@ const TokenSelect = ({ label, type }) => {
 
 const SwapInterface = () => {
 
-    const prices = useContext(PriceContext)
+    // const prices = useContext(PriceContext)
 
     // Calculate swap info
 
