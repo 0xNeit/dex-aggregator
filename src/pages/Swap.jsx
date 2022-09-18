@@ -510,7 +510,7 @@ const SwapSettings = () => {
                     </Slippage>
                     <SlippageContent>
                         <SlippageSlider id="slippage-slider" type="range" min="10" max="200" value={settings.slippage * 100} onChange={updateSlippage}></SlippageSlider>
-                        <SlippageInput maxlength="5" onChange={setSlippage}></SlippageInput>
+                        <SlippageInput maxLength="5" onChange={setSlippage}></SlippageInput>
                     </SlippageContent>
                 </SlippageSection>
             </Section>
@@ -525,7 +525,7 @@ const SwapSettings = () => {
             <Routers>
                 {Object.keys(settings.routers).map(router => (
                     <Router key={router}>
-                            {router.name}
+                            {settings.routers[router].name}
                     </Router>
                         ))}
             </Routers>
