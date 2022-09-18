@@ -1,10 +1,13 @@
 [{
+    "id": "0x",
     "name": "0x",
     "icon": "/routers/0x.svg"
 }, {
+    "id": "1inch",
     "name": "1inch",
     "icon": "/routers/1inch.svg"
 }, {
+    "id": "firebird",
     "name": "Firebird",
     "icon": "/routers/firebird.svg"
 }]
