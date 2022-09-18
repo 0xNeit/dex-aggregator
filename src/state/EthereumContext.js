@@ -157,7 +157,7 @@ const EthereumContextProvider = ({ children }) => {
             chains[chainId].setTokenBalances(balances)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chain])
+    }, [chain, account])
 
     // Component
 
