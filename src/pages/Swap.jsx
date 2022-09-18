@@ -609,7 +609,7 @@ const SwapSettings = () => {
                         <RouterSection>
                             <RouterStatus>{settings.routers[router].enabled ? "Enabled" : "Disabled"}</RouterStatus>
                                 <SwitchLabel>
-                                    <SwitchInput type="checkbox" defaultChecked={settings.routers[router].enabled} onChange={() => toggleRouter(router)}></SwitchInput>
+                                    <SwitchInput type="checkbox" checked={settings.routers[router].enabled} onChange={() => toggleRouter(router)}></SwitchInput>
                                     <Slider></Slider>
                                 </SwitchLabel>
                         </RouterSection>
