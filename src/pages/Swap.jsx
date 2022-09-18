@@ -265,6 +265,13 @@ const TokenSelect = ({ label, type, chain }) => {
         setMenuActive(false)
     }
 
+    // Hide menu on chain changes
+
+    useEffect(() => {
+        setMenuActive(false)
+    }, [chain])
+
+
     // Update token list on data changes
 
     useEffect(() => {
@@ -309,7 +316,7 @@ const TokenSelect = ({ label, type, chain }) => {
                                 <Icon src={`/tokens/${token.default ? token.symbol : "unknown"}.svg`} />
                                 <Info>
                                     <Name>{token.name} - {token.symbol}</Name>
-                                    <Balance>{parse(chain.tokenBalances[token.address])}</Balance>
+                                    <Balance>{chain.tokenBalances[token.address] ? parse(chain.tokenBalances[token.address]) : "0"}</Balance>
                                 </Info>
                             </Token>
                         ))}
