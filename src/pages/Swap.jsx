@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
 import { parse, format } from "../helpers/number"
-// import PriceContext from "../state/PriceContext";
+import PriceContext from "../state/PriceContext";
 import styled from "styled-components";
 
 
@@ -101,13 +101,13 @@ const SwapInfo = styled.div`
     `
 
 const Select = styled.button`
-    width: 50%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     font-size: 1.2rem;
     overflow: hidden;
+    margin-left: auto;
     padding: 9px 0;
     `
 const ArrowIcon = styled.img`
@@ -243,15 +243,16 @@ const SwapInput = ({ backgroundColor }) => {
     )
 }
 
-const TokenSelect = ({ label, type, chain }) => {
+const TokenSelect = ({ label, type }) => {
     // Token selection menu data
+    const { chain, account } = useContext(EthereumContext)
     const token = chain.swap[type === "input" ? "tokenIn" : "tokenOut"]
     const setToken = chain.swap[type === "input" ? "setTokenIn" : "setTokenOut"]
     const opposite = chain.swap[type === "input" ? "tokenOut" : "tokenIn"]
     const [ menuActive, setMenuActive ] = useState(false)
     const [ tokenList, setTokenList ] = useState(chain.tokens)
 
-    // Update token search
+    // Update token search with query
 
     function updateTokenList(event) {
         const query = event.target.value.toLowerCase()
@@ -280,11 +281,11 @@ const TokenSelect = ({ label, type, chain }) => {
         setMenuActive(false)
     }
 
-    // Hide menu on chain changes
+    // Hide menu on chain or account changes
 
     useEffect(() => {
         setMenuActive(false)
-    }, [chain])
+    }, [chain, account])
 
 
     // Update token list on data changes
@@ -346,8 +347,7 @@ const TokenSelect = ({ label, type, chain }) => {
 
 const SwapInterface = () => {
 
-    const { chain } = useContext(EthereumContext)
-    // const prices = useContext(PriceContext)
+    const prices = useContext(PriceContext)
 
     // Calculate swap info
 
@@ -360,7 +360,7 @@ const SwapInterface = () => {
             <Label style={{ marginBottom: "12px" }}>Input Token</Label>
                 <TokenSection>
                     <SwapInput></SwapInput>
-                    <TokenSelect label="Input Token" type="input" chain={chain}></TokenSelect>
+                    <TokenSelect label="Input Token" type="input"></TokenSelect>
                 </TokenSection>
                 <Middle>
                     <Switch>
@@ -370,7 +370,7 @@ const SwapInterface = () => {
                 </Middle>
             <TokenSection>
                 <Output></Output>
-                <TokenSelect label="Output Token" type="output" chain={chain}></TokenSelect>
+                <TokenSelect label="Output Token" type="output"></TokenSelect>
             </TokenSection>
             <SwapButton>Swap Tokens</SwapButton>
             <SwapInfo>{getSwapInfo()}</SwapInfo>

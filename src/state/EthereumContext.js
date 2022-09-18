@@ -4,7 +4,7 @@ import { createContext, useEffect, useState } from "react"
 import chainData from "../data/chains"
 import useTokens from "../hooks/useTokens"
 import useSwap from "../hooks/useSwap"
-// import ERC20ABI from "../abis/ERC20.json"
+import ERC20ABI from "../abis/ERC20.json"
 import Web3 from "web3"
 
 // Load Ethereum data
