@@ -30,12 +30,14 @@ const Input = styled.input`
 
 const StyledInterface = styled.div`
     position: relative;
-    width: 300px;
+    width: 332px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    margin-right: 48px;
+    border-right: 0.5px solid var(--gray);
+    padding: 32px 32px 32px 0;
+    margin-right: 32px;
     `
     
 const StyledImage = styled.img`
@@ -46,7 +48,11 @@ const StyledImage = styled.img`
 
 const Settings = styled.div`
     width: calc(100% - 348px);
-    height: 100%;   
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 16px;
+    padding: 32px 0;   
     `
 
 const Top = styled.div`
@@ -55,6 +61,70 @@ const Top = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
+    `
+    
+const Section = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    `
+
+const SlippageSection = styled.div`
+    width: 40%;
+    margin-right: 32px;
+    `
+
+const GasSection = styled.div`
+    width: calc(60% - 32px);
+    `
+
+const SectionTitle = styled.div`
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    `
+
+const SlippageContent = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    `
+
+const Slippage = styled.div`
+    font-size: 1.2rem;
+    color: var(--dark-gray);
+    `
+
+const SlippageSlider = styled.input`
+    width: 100%;
+    height: 1px;
+    appearance: none;
+    background-color: var(--light-gray);
+    outline: none;
+    margin: 0 0.75rem;
+    &::-webkit-slider-thumb {
+        appearance: none;
+        width: 10px;
+        height: 25px;
+        cursor: pointer;
+        background-color: var(--light-dark);
+        border: 1px solid var(--background);
+    }
+    `
+
+const SlippageInput = styled.input`
+    width: 50px;
+    outline: none;
+    border: 1px solid var(--light-gray);
+    border-radius: 8px;
+    padding: 6px 8px;
+    &:active {
+        border: 1px solid var(--gray);
+    }
     `
 
 const TokenSection = styled.div`
@@ -396,8 +466,37 @@ const SwapInterface = () => {
 }
 
 const SwapSettings = () => {
+
+    // Swap settings data
+
+    const settings = useContext(EthereumContext).chain.swapSettings
+
     return (
-        <Settings>This is the settings</Settings>
+        <Settings>
+        <Top>
+            <Section>
+                <SlippageSection>
+                    <Slippage>Slippage</Slippage>
+                    <SlippageContent>
+                        <Slippage>{settings.slippage}%</Slippage>
+                        <SlippageSlider id="slippage-slider" type="range"></SlippageSlider>
+                        <SlippageInput></SlippageInput>
+                    </SlippageContent>
+                </SlippageSection>
+            </Section>
+            <Section>
+                <GasSection>
+                    <SectionTitle>Gas Price</SectionTitle>
+                </GasSection>
+            </Section>
+        </Top>
+        <Section>
+            <SectionTitle>Aggregators</SectionTitle>
+        </Section>
+        <Section>
+            <SectionTitle>Referral Address</SectionTitle>
+        </Section>
+    </Settings>
     )
 }
 
