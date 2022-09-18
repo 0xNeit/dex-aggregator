@@ -316,6 +316,15 @@ const Balance = styled.div`
     color: var(--gray);
 `
 
+const Routers = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 16px;
+`
+
+const Router = styled.div`
+`
+
 
 
 const SwapInput = ({ backgroundColor }) => {
@@ -513,6 +522,13 @@ const SwapSettings = () => {
         </Top>
         <Section>
             <SectionTitle>Aggregators</SectionTitle>
+            <Routers>
+                {Object.keys(settings.routers).map(router => (
+                    <Router key={router}>
+                            {router.name}
+                    </Router>
+                        ))}
+            </Routers>
         </Section>
         <Section>
             <SectionTitle>Referral Address</SectionTitle>
