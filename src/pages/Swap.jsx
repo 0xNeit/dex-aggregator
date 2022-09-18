@@ -82,6 +82,10 @@ const GasSection = styled.div`
     `
 
 const SectionTitle = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     font-size: 1.2rem;
     margin-bottom: 0.75rem;
     `
@@ -95,6 +99,7 @@ const SlippageContent = styled.div`
     `
 
 const Slippage = styled.div`
+    white-space: pre-wrap;
     font-size: 1.2rem;
     color: var(--dark-gray);
     `
@@ -105,7 +110,7 @@ const SlippageSlider = styled.input`
     appearance: none;
     background-color: var(--light-gray);
     outline: none;
-    margin: 0 0.75rem;
+    margin-right: 1rem;
     &::-webkit-slider-thumb {
         appearance: none;
         width: 10px;
@@ -117,7 +122,7 @@ const SlippageSlider = styled.input`
     `
 
 const SlippageInput = styled.input`
-    width: 50px;
+    width: 60px;
     outline: none;
     border: 1px solid var(--light-gray);
     border-radius: 8px;
@@ -196,10 +201,10 @@ const ArrowIcon = styled.img`
     `
 const Menu = styled.div`
     position: absolute;
-    top: 0;
+    top: 32px;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 32px);
+    height: calc(100% - 64px);
     background-color: var(--background);
     `
 
@@ -471,16 +476,32 @@ const SwapSettings = () => {
 
     const settings = useContext(EthereumContext).chain.swapSettings
 
+    // Update slippage with slider value
+
+    function updateSlippage(event) {
+        settings.setSlippage(+event.target.value / 100)
+    }
+
+    // Set slippage with text input value
+
+    function setSlippage(event) {
+        if (isNaN(+event.target.value) || +event.target.value <= 0 || event.target.value >= 50) return
+        if (event.target.value.endsWith(".")) return
+        settings.setSlippage(+event.target.value)
+    }
+
     return (
         <Settings>
         <Top>
             <Section>
                 <SlippageSection>
-                    <Slippage>Slippage</Slippage>
-                    <SlippageContent>
+                    <Slippage>
+                        Slippage
                         <Slippage>{settings.slippage}%</Slippage>
-                        <SlippageSlider id="slippage-slider" type="range"></SlippageSlider>
-                        <SlippageInput></SlippageInput>
+                    </Slippage>
+                    <SlippageContent>
+                        <SlippageSlider id="slippage-slider" type="range" min="10" max="200" value={settings.slippage * 100} onChange={updateSlippage}></SlippageSlider>
+                        <SlippageInput maxlength="5" onChange={setSlippage}></SlippageInput>
                     </SlippageContent>
                 </SlippageSection>
             </Section>
