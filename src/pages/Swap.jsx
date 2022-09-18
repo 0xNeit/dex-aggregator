@@ -87,7 +87,7 @@ const SectionTitle = styled.div`
     justify-content: flex-start;
     align-items: center;
     font-size: 1.2rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1.2rem;
     `
 
 const SlippageContent = styled.div`
@@ -317,15 +317,82 @@ const Balance = styled.div`
 `
 
 const Routers = styled.div`
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 16px;
 `
 
 const Router = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 `
 
+const RouterSection = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`
 
+const RouterTitle = styled.div`
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+`
+
+const RouterIcon = styled.img`
+    width: 1.2rem;
+    height: 1.2rem;
+    object-fit: contain;
+    margin-right: 0.75rem;
+`
+
+const RouterStatus = styled.div`
+    min-width: 70px;
+    color: var(--dark-gray);
+    margin-right: 1rem;
+`
+
+const SwitchLabel = styled.label`
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 1.2rem;
+`
+
+const SwitchInput = styled.input`
+    opacity: 0;
+    width: 0;
+    height: 0;
+`
+
+const Slider = styled.span`
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--light-gray);
+    &:before {
+        position: absolute;
+        width: calc(1.2rem - 8px);
+        height: calc(1.2rem - 8px);
+        left: 4px;
+        bottom: 4px;
+        content: "";
+        outline: none;
+        background-color: white;
+    }
+    &:checked {
+        background-color: var(--light-dark);
+        &:before {
+            transform: translateX(calc(1.8rem));
+        }
+    }
+`
 
 const SwapInput = ({ backgroundColor }) => {
     // Component
@@ -499,6 +566,14 @@ const SwapSettings = () => {
         settings.setSlippage(+event.target.value)
     }
 
+    // Toggle router enabled
+
+    function toggleRouter(router) {
+        const routers = { ...settings.routers }
+        routers[router].enabled = !routers[router].enabled
+        settings.setRouters(routers)
+    }
+
     return (
         <Settings>
         <Top>
@@ -525,7 +600,19 @@ const SwapSettings = () => {
             <Routers>
                 {Object.keys(settings.routers).map(router => (
                     <Router key={router}>
-                            {settings.routers[router].name}
+                        <RouterSection>
+                            <RouterTitle>
+                                <RouterIcon src={`/routers/${router}.svg`} />
+                                    {settings.routers[router].name}
+                            </RouterTitle>
+                        </RouterSection>
+                        <RouterSection>
+                            <RouterStatus>{settings.routers[router].enabled ? "Enabled" : "Disabled"}</RouterStatus>
+                                <SwitchLabel>
+                                    <SwitchInput type="checkbox" defaultChecked={settings.routers[router].enabled} onChange={() => toggleRouter(router)}></SwitchInput>
+                                    <Slider></Slider>
+                                </SwitchLabel>
+                        </RouterSection>
                     </Router>
                         ))}
             </Routers>
