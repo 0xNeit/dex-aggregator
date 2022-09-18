@@ -80,9 +80,13 @@ function useSwapSettings(chains) {
 
     return {
         slippage,
+        setSlippage,
         gas,
+        setGas,
         routers,
-        referral
+        setRouters,
+        referral,
+        setReferral
     }
 }
 
