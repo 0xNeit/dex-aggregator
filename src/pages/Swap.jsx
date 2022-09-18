@@ -49,9 +49,10 @@ const StyledImage = styled.img`
 const Settings = styled.div`
     width: calc(100% - 348px);
     height: 100%;
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    grid-gap: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     padding: 32px 0;   
     `
 
@@ -61,6 +62,7 @@ const Top = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
+    margin-bottom: 2rem;
     `
     
 const Section = styled.div`
@@ -70,6 +72,7 @@ const Section = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    margin-bottom: 2rem;
     `
 
 const SlippageSection = styled.div`
@@ -97,11 +100,11 @@ const SlippageContent = styled.div`
     justify-content: flex-start;
     align-items: center;
     `
-
-const Slippage = styled.div`
-    white-space: pre-wrap;
-    font-size: 1.2rem;
-    color: var(--dark-gray);
+    
+const TitleValue = styled.div`
+        white-space: pre-wrap;
+        font-size: 1.2rem;
+        color: var(--dark-gray);
     `
 
 const SlippageSlider = styled.input`
@@ -127,10 +130,17 @@ const SlippageInput = styled.input`
     border: 1px solid var(--light-gray);
     border-radius: 8px;
     padding: 6px 8px;
-    &:active {
+    &:focus {
         border: 1px solid var(--gray);
     }
     `
+
+const GasControls = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`
 
 const TokenSection = styled.div`
     width: 100%;
@@ -394,6 +404,48 @@ const Slider = styled.span`
     }
 `
 
+const ReferralTitle = styled.div`
+    margin-bottom: 0.2rem;
+`
+
+const ReferralValue = styled.div`
+    font-size: 1rem;
+`
+
+const ReferralLabel = styled.div`
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+    margin-bottom: 1.2rem;
+`
+const Referral = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`
+
+const ReferralInput = styled.input`
+    width: 60%;
+    outline: none;
+    border: 1px solid var(--light-gray);
+    border-radius: 8px;
+    padding: 6px 8px;
+    margin-right: 1rem;
+    &:focus {
+        border: 1px solid var(--gray);
+    }
+`
+
+const SetReferral = styled.button`
+    border: 1px solid var(--light-dark);
+    border-radius: 8px;
+    padding: 6px 16px;
+    &:hover {
+        background-color: var(--light);
+    }
+`
+
 const SwapInput = ({ backgroundColor }) => {
     // Component
 
@@ -550,7 +602,7 @@ const SwapSettings = () => {
 
     // Swap settings data
 
-    const settings = useContext(EthereumContext).chain.swapSettings
+    const { web3, chain: { swapSettings: settings } } = useContext(EthereumContext)
 
     // Update slippage with slider value
 
@@ -574,26 +626,33 @@ const SwapSettings = () => {
         settings.setRouters(routers)
     }
 
+    // Set referral address
+
+    function setReferral() {
+        const address = document.getElementById("referral-input").value
+        if (web3.utils.isAddress(address)) {
+            settings.setReferral(web3.utils.toChecksumAddress(address))
+        }
+    }
+
+
     return (
         <Settings>
         <Top>
-            <Section>
-                <SlippageSection>
-                    <Slippage>
-                        Slippage
-                        <Slippage>{settings.slippage}%</Slippage>
-                    </Slippage>
-                    <SlippageContent>
-                        <SlippageSlider id="slippage-slider" type="range" min="10" max="200" value={settings.slippage * 100} onChange={updateSlippage}></SlippageSlider>
-                        <SlippageInput maxLength="5" onChange={setSlippage}></SlippageInput>
-                    </SlippageContent>
-                </SlippageSection>
-            </Section>
-            <Section>
-                <GasSection>
-                    <SectionTitle>Gas Price</SectionTitle>
-                </GasSection>
-            </Section>
+            <SlippageSection>
+                <SectionTitle>
+                    Slippage
+                    <TitleValue>{settings.slippage}%</TitleValue>
+                </SectionTitle>
+                <SlippageContent>
+                    <SlippageSlider id="slippage-slider" type="range" min="10" max="200" value={settings.slippage * 100} onChange={updateSlippage}></SlippageSlider>
+                    <SlippageInput maxLength="5" onChange={setSlippage}></SlippageInput>
+                </SlippageContent>
+            </SlippageSection>
+            <GasSection>
+                <SectionTitle>Gas Price</SectionTitle>
+                <GasControls></GasControls>
+            </GasSection>
         </Top>
         <Section>
             <SectionTitle>Aggregators</SectionTitle>
@@ -618,7 +677,17 @@ const SwapSettings = () => {
             </Routers>
         </Section>
         <Section>
-            <SectionTitle>Referral Address</SectionTitle>
+            <SectionTitle>
+                <ReferralTitle>Referral Address</ReferralTitle>
+                <TitleValue>
+                    <ReferralValue> - {settings.referral || "None"}</ReferralValue>
+                </TitleValue>
+            </SectionTitle>
+                <ReferralLabel>Referral address will not work if it is the same as the account swapping tokens</ReferralLabel>
+                <Referral>
+                    <ReferralInput id="referral-input"></ReferralInput>
+                    <SetReferral onClick={setReferral}>Set</SetReferral>
+                </Referral>
         </Section>
     </Settings>
     )
