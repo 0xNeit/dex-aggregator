@@ -703,7 +703,7 @@ const SwapSettings = () => {
             <GasSection>
                 <SectionTitle>
                     Gas Price
-                    <TitleValue> - {typeof settings.gas[chain.id] === "number" ? `custom ${settings.gas[chain.id]}` : "100"} gwei</TitleValue>
+                    <TitleValue> - {typeof settings.gas[chain.id] === "number" ? `custom ${settings.gas[chain.id]}` : chain.gasPrice[settings.gas[chain.id]]} gwei</TitleValue>
                 </SectionTitle>
                 <GasControls>
                     <GasSwitch data-checked={settings.gas[chain.id] === "slow"} onClick={() => updateGas("slow")}></GasSwitch>
