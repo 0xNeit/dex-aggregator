@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 const Content = styled.div`
     width: 100%;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 120px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -156,7 +156,7 @@ const GasSwitch = styled.div`
     background-color: var(--light-gray);
     border-radius: 4px;
     margin-right: 0.5rem;
-    &:data-checked {
+    &:checked {
         background-color: var(--light-dark);
     }
     `
@@ -693,8 +693,7 @@ const SwapSettings = () => {
         <Top>
             <SlippageSection>
                 <SectionTitle>
-                    Slippage
-                    <TitleValue>{settings.slippage}%</TitleValue>
+                    Slippage <TitleValue>{settings.slippage}%</TitleValue>
                 </SectionTitle>
                 <SlippageContent>
                     <SlippageSlider id="slippage-slider" type="range" min="10" max="200" value={settings.slippage * 100} onChange={updateSlippage}></SlippageSlider>

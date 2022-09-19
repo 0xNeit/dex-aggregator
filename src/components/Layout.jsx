@@ -130,6 +130,13 @@ const SwitchIcon = styled.img`
     margin-right: 0.65rem;
     `
 
+const StyledFooter = styled.div`
+    width: 100%;
+    height: 40px;
+    font-size: 0.9rem;
+    padding: 0 max(calc(50vw - 500px), 20px);
+`
+
 const WalletManager = () => {
     // Wallet data
 
@@ -224,6 +231,18 @@ const NavBar = () => (
     </Nav>
 )
 
+// Footer component
+
+const Footer = () => (
+
+    <>
+        <StyledFooter>
+            Built by Natev2
+        </StyledFooter>
+    </>
+)
+
+
 
 // Layout component
 
@@ -231,6 +250,7 @@ const Layout = ({ children }) => (
     <Wrapper>
         <NavBar></NavBar>
         <Content>{children}</Content>
+        <Footer></Footer>
     </Wrapper>
 
 )
