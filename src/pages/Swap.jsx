@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import EthereumContext from "../state/EthereumContext";
 import { parse, format } from "../helpers/number"
+import quoteSwap from "../helpers/quote";
 // import PriceContext from "../state/PriceContext";
 import styled from "styled-components";
 
@@ -476,11 +477,17 @@ const SetReferral = styled.button`
     }
 `
 
-const SwapInput = ({ backgroundColor }) => {
+const SwapInput = ({ onChange }) => {
+    // Handle swap input change
+
+    function handleChange(event) {
+        console.log("changed")
+    }
+
     // Component
 
     return (
-        <Input></Input>
+        <Input onChange={handleChange}></Input>
     )
 }
 
@@ -590,6 +597,15 @@ const SwapInterface = () => {
     const { chain } = useContext(EthereumContext)
     // const prices = useContext(PriceContext)
 
+    const [ updateTimeout, setUpdateTimeout ] = useState()
+
+    // Update swap quote
+
+    function updateSwapQuote() {
+        clearTimeout(updateTimeout)
+        setUpdateTimeout(setTimeout(quoteSwap, 500))
+    }
+
     // Switch input and output tokens
 
     function switchTokens() {
@@ -608,7 +624,7 @@ const SwapInterface = () => {
         <StyledInterface>
             <Label style={{ marginBottom: "12px" }}>Input Token</Label>
                 <TokenSection>
-                    <SwapInput></SwapInput>
+                    <SwapInput onChange={updateSwapQuote}></SwapInput>
                     <TokenSelect label="Input Token" type="input"></TokenSelect>
                 </TokenSection>
                 <Middle>
@@ -760,7 +776,7 @@ const SwapSettings = () => {
 const RouterOutputs = () => {
     // Router output data
 
-    const routers = useContext(EthereumContext).chain.swap.routers
+    const swap = useContext(EthereumContext).chain.swap
 
     const StyledOutput = styled.div`
         width: 100%;
@@ -807,7 +823,7 @@ const RouterOutputs = () => {
         <>
             <StyledOutput>
                 <Title>Aggregation Routers</Title>
-                {routers.map(router => (
+                {swap.routers.map(router => (
                     <StyledRouter>
                         <RouterInfo>
                             <RouterImage src={`/routers/${router.id}.svg`} />
