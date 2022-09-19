@@ -778,6 +778,29 @@ const RouterOutputs = () => {
         margin-bottom: 2rem;
         `
 
+    const StyledRouter = styled.div`
+        width: 100%:
+        display: grid;
+        grid-template-columns: 20% 50% 30%;
+        grid-gap: 16px;
+        margin: 1.5rem 0;
+        `
+
+    const RouterInfo = styled.div`
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 1.2rem;
+        `
+
+    const RouterImage = styled.img`
+        width: 1.2rem;
+        height: 1.2rem;
+        object-fit: contain;
+        margin-right: 1rem;
+        `
+
     // Component
 
     return (
@@ -785,7 +808,12 @@ const RouterOutputs = () => {
             <StyledOutput>
                 <Title>Aggregation Routers</Title>
                 {routers.map(router => (
-                    <Router>{JSON.stringify(router)}</Router>
+                    <StyledRouter>
+                        <RouterInfo>
+                            <RouterImage src={`/routers/${router.id}.svg`} />
+                            {router.name}
+                        </RouterInfo>
+                    </StyledRouter>
                 ))}
             </StyledOutput>
         </>
