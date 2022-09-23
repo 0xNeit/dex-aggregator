@@ -1,11 +1,11 @@
-import routerList from "../data/routers"
+/* import routerList from "../data/routers"
 
 // Load router handlers
 
-const routers = []
+/* const routers = []
 for (const router of routerList) {
     // routers.push(require(`./routers/${router.id}.js`))
-}
+} */
 
 // Quote swap on routers
 
