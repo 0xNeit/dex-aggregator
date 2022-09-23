@@ -4,7 +4,7 @@ import routerList from "../data/routers"
 
 const routers = []
 for (const router of routerList) {
-    routers.push(require(`./routers/${router.id}.js`))
+    // routers.push(require(`./routers/${router.id}.js`))
 }
 
 // Quote swap on routers

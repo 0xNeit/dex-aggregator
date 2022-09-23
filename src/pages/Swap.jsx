@@ -537,6 +537,7 @@ const SwapInput = ({ onChange }) => {
         if (swap.tokenIn && inputBefore) {
             onChange(unparse(inputBefore, swap.tokenIn.decimals), true)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swap.tokenIn])
 
     // Component
